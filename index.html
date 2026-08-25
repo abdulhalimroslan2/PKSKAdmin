@@ -43,6 +43,9 @@
         <button id="btnOpenConfigModal" class="btn-admin btn-ghost" title="Tetapan Supabase">
           <i class="fa-solid fa-gear"></i>
         </button>
+        <button id="btnLogoutAdmin" class="btn-admin btn-ghost btn-sm" style="color:#fb7185; border:1px solid rgba(244,63,94,0.25);" title="Log Keluar">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Keluar</span>
+        </button>
       </div>
     </header>
 
@@ -417,6 +420,44 @@
         <button id="btnSaveAndCopyShopeeMessage" class="btn-admin btn-emerald">
           <i class="fa-solid fa-paper-plane"></i> Simpan Pembeli & Salin Mesej
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       LOGIN GATE LOCK SCREEN (PASSWORD PROTECTED: @reeZ860)
+       ========================================================================= -->
+  <div id="loginGateOverlay" class="login-gate-backdrop">
+    <div class="login-gate-card">
+      <div class="login-header">
+        <div class="login-icon-badge">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2>PKSK Admin Hub</h2>
+        <p>Sila masukkan kata laluan pentadbir untuk mengakses sistem pemantauan lesen.</p>
+      </div>
+
+      <form id="loginGateForm">
+        <div class="form-group" style="margin-bottom:1.25rem;">
+          <label class="form-label" for="loginPasswordInput">Kata Laluan Pentadbir:</label>
+          <div style="position:relative;">
+            <input type="password" id="loginPasswordInput" class="form-control" placeholder="Masukkan kata laluan..." autofocus autocomplete="current-password">
+            <button type="button" id="btnToggleLoginPass" class="btn-admin btn-ghost btn-sm" style="position:absolute; right:8px; top:7px; font-size:0.85rem;" title="Papar/Sembunyi Kata Laluan">
+              <i class="fa-solid fa-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+          <div id="loginErrorMsg" style="display:none; color:#fb7185; font-size:0.82rem; margin-top:0.45rem; font-weight:600;">
+            <i class="fa-solid fa-circle-exclamation"></i> Kata laluan tidak sah. Sila cuba lagi.
+          </div>
+        </div>
+
+        <button type="submit" id="btnLoginSubmit" class="btn-admin btn-primary" style="width:100%; padding:0.75rem; font-size:0.95rem; font-weight:700; justify-content:center; box-shadow:0 4px 15px rgba(37,99,235,0.4);">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Log Masuk Pentadbir</span>
+        </button>
+      </form>
+
+      <div style="margin-top:1.5rem; text-align:center; font-size:0.75rem; color:var(--text-subtle);">
+        <i class="fa-solid fa-shield-halved"></i> Dilindungi Kata Laluan Keselamatan
       </div>
     </div>
   </div>

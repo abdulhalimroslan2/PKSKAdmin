@@ -16,6 +16,10 @@
 
   const STORAGE_KEY_URL = 'pksk_admin_supabase_url';
   const STORAGE_KEY_KEY = 'pksk_admin_supabase_key';
+  
+  // Kata Laluan Keselamatan Pentadbir PKSK
+  const ADMIN_PASSWORD = '@reeZ860';
+  const STORAGE_KEY_AUTH = 'pksk_admin_auth_session';
 
   function getSupabaseConfig() {
     return {
@@ -38,6 +42,15 @@
 
   // DOM Cache
   const dom = {
+    // Login Gate Lock Screen
+    loginGateOverlay: document.getElementById('loginGateOverlay'),
+    loginGateForm: document.getElementById('loginGateForm'),
+    loginPasswordInput: document.getElementById('loginPasswordInput'),
+    btnToggleLoginPass: document.getElementById('btnToggleLoginPass'),
+    eyeIcon: document.getElementById('eyeIcon'),
+    loginErrorMsg: document.getElementById('loginErrorMsg'),
+    btnLogoutAdmin: document.getElementById('btnLogoutAdmin'),
+
     // Stats
     statTotalKeys: document.getElementById('statTotalKeys'),
     statActiveKeys: document.getElementById('statActiveKeys'),
@@ -896,6 +909,65 @@
     if (dom.btnSaveAndCopyShopeeMessage) {
       dom.btnSaveAndCopyShopeeMessage.onclick = saveAndCopyShopeeMessage;
     }
+
+    // Admin Auth Listeners
+    if (dom.loginGateForm) {
+      dom.loginGateForm.onsubmit = handleLoginSubmit;
+    }
+    if (dom.btnToggleLoginPass) {
+      dom.btnToggleLoginPass.onclick = togglePasswordVisibility;
+    }
+    if (dom.btnLogoutAdmin) {
+      dom.btnLogoutAdmin.onclick = handleLogout;
+    }
+  }
+
+  /* =========================================================================
+     ADMIN AUTHENTICATION GATE (@reeZ860)
+     ========================================================================= */
+  function isAuthenticated() {
+    return sessionStorage.getItem(STORAGE_KEY_AUTH) === 'authenticated';
+  }
+
+  function handleLoginSubmit(e) {
+    if (e) e.preventDefault();
+    const enteredPassword = dom.loginPasswordInput.value.trim();
+
+    if (enteredPassword === ADMIN_PASSWORD) {
+      sessionStorage.setItem(STORAGE_KEY_AUTH, 'authenticated');
+      dom.loginGateOverlay.classList.add('hidden');
+      if (dom.loginErrorMsg) dom.loginErrorMsg.style.display = 'none';
+      showToast('✓ Log masuk pentadbir berjaya! Selamat kembali.', 'success');
+      fetchAllLicensesFromSupabase();
+    } else {
+      if (dom.loginErrorMsg) dom.loginErrorMsg.style.display = 'block';
+      const card = dom.loginGateOverlay ? dom.loginGateOverlay.querySelector('.login-gate-card') : null;
+      if (card) {
+        card.classList.remove('shake-animation');
+        void card.offsetWidth;
+        card.classList.add('shake-animation');
+      }
+      dom.loginPasswordInput.value = '';
+      dom.loginPasswordInput.focus();
+    }
+  }
+
+  function handleLogout() {
+    sessionStorage.removeItem(STORAGE_KEY_AUTH);
+    dom.loginPasswordInput.value = '';
+    if (dom.loginErrorMsg) dom.loginErrorMsg.style.display = 'none';
+    dom.loginGateOverlay.classList.remove('hidden');
+    dom.loginPasswordInput.focus();
+    showToast('Anda telah log keluar daripada sistem pentadbir.', 'info');
+  }
+
+  function togglePasswordVisibility() {
+    if (!dom.loginPasswordInput) return;
+    const isPass = dom.loginPasswordInput.type === 'password';
+    dom.loginPasswordInput.type = isPass ? 'text' : 'password';
+    if (dom.eyeIcon) {
+      dom.eyeIcon.className = isPass ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+    }
   }
 
   /* =========================================================================
@@ -941,7 +1013,6 @@ Selamat membuat persediaan dan semoga anakanda beroleh keputusan cemerlang melan
     if (targetKey) {
       targetLic = state.allLicenses.find(l => l.license_key === targetKey);
     } else {
-      // Cari kunci berstatus ACTIVE yang pertama
       targetLic = state.allLicenses.find(l => l.status === 'ACTIVE');
       if (targetLic) {
         targetKey = targetLic.license_key;
@@ -1022,7 +1093,15 @@ Selamat membuat persediaan dan semoga anakanda beroleh keputusan cemerlang melan
   // Initialization
   document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
-    fetchAllLicensesFromSupabase();
+    if (isAuthenticated()) {
+      if (dom.loginGateOverlay) dom.loginGateOverlay.classList.add('hidden');
+      fetchAllLicensesFromSupabase();
+    } else {
+      if (dom.loginGateOverlay) {
+        dom.loginGateOverlay.classList.remove('hidden');
+        if (dom.loginPasswordInput) dom.loginPasswordInput.focus();
+      }
+    }
   });
 
 })();
