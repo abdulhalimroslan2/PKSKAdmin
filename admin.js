@@ -903,7 +903,7 @@
      ========================================================================= */
   function generateShopeeDeliveryMessage(licenseKey, buyerName, orderId, webUrl) {
     const cleanName = buyerName && buyerName.trim() ? buyerName.trim() : 'Tuan / Puan';
-    const baseWebUrl = webUrl && webUrl.trim() ? webUrl.trim().replace(/\/$/, '') : 'https://abdulhalimroslan2.github.io/PKSK';
+    const baseWebUrl = webUrl && webUrl.trim() ? webUrl.trim().replace(/\/$/, '') : 'https://pksk2026.vercel.app';
     const directAccessUrl = `${baseWebUrl}/?key=${encodeURIComponent(licenseKey)}`;
 
     return `Salam sejahtera kepada ${cleanName} & Terima kasih atas pembelian di Shopee kami! ⭐⭐⭐⭐⭐
