@@ -60,6 +60,21 @@
     btnCopyNextAvailable: document.getElementById('btnCopyNextAvailable'),
     btnCopyBatchAvailable: document.getElementById('btnCopyBatchAvailable'),
 
+    // Shopee Quick Assign & Message Modal
+    btnQuickShopeeAssign: document.getElementById('btnQuickShopeeAssign'),
+    btnQuickShopeeAssignBanner: document.getElementById('btnQuickShopeeAssignBanner'),
+    modalShopeeMessage: document.getElementById('modalShopeeMessage'),
+    btnCloseShopeeModal: document.getElementById('btnCloseShopeeModal'),
+    btnCancelShopeeModal: document.getElementById('btnCancelShopeeModal'),
+    shopeeModalKey: document.getElementById('shopeeModalKey'),
+    btnCopyOnlyKey: document.getElementById('btnCopyOnlyKey'),
+    shopeeModalBuyer: document.getElementById('shopeeModalBuyer'),
+    shopeeModalOrder: document.getElementById('shopeeModalOrder'),
+    shopeeModalUrl: document.getElementById('shopeeModalUrl'),
+    shopeeMessagePreview: document.getElementById('shopeeMessagePreview'),
+    btnCopyShopeeMessageOnly: document.getElementById('btnCopyShopeeMessageOnly'),
+    btnSaveAndCopyShopeeMessage: document.getElementById('btnSaveAndCopyShopeeMessage'),
+
     // Table & Pagination
     licenseTableBody: document.getElementById('licenseTableBody'),
     paginationWrap: document.getElementById('paginationWrap'),
@@ -422,6 +437,9 @@
           <td>${expiryInfo}</td>
           <td style="text-align: right;">
             <div style="display:inline-flex; gap:0.35rem; justify-content:flex-end;">
+              <button class="btn-admin btn-emerald btn-sm" onclick="window.openShopeeMessageModal('${lic.license_key}')" title="Salin Mesej Shopee / WhatsApp">
+                <i class="fa-solid fa-paper-plane"></i> Mesej
+              </button>
               <button class="btn-admin btn-outline btn-sm" onclick="window.openManageModal('${lic.license_key}')" title="Urus & Edit Kunci">
                 <i class="fa-solid fa-pen-to-square"></i> Urus
               </button>
@@ -840,7 +858,166 @@
       showToast('Konfigurasi Supabase dikemaskini. Menyegarkan data...', 'success');
       fetchAllLicensesFromSupabase();
     };
+
+    // Shopee Quick Assign & Message Modal Handlers
+    if (dom.btnQuickShopeeAssign) {
+      dom.btnQuickShopeeAssign.onclick = () => openQuickShopeeAssignModal();
+    }
+    if (dom.btnQuickShopeeAssignBanner) {
+      dom.btnQuickShopeeAssignBanner.onclick = () => openQuickShopeeAssignModal();
+    }
+    if (dom.btnCloseShopeeModal) {
+      dom.btnCloseShopeeModal.onclick = () => dom.modalShopeeMessage.classList.add('hidden');
+    }
+    if (dom.btnCancelShopeeModal) {
+      dom.btnCancelShopeeModal.onclick = () => dom.modalShopeeMessage.classList.add('hidden');
+    }
+    if (dom.btnCopyOnlyKey) {
+      dom.btnCopyOnlyKey.onclick = () => {
+        const key = dom.shopeeModalKey.value;
+        if (key) {
+          navigator.clipboard.writeText(key);
+          showToast(`Kunci <strong>${key}</strong> disalin!`, 'success');
+        }
+      };
+    }
+    if (dom.shopeeModalBuyer) {
+      dom.shopeeModalBuyer.oninput = updateShopeeMessagePreview;
+    }
+    if (dom.shopeeModalOrder) {
+      dom.shopeeModalOrder.oninput = updateShopeeMessagePreview;
+    }
+    if (dom.shopeeModalUrl) {
+      dom.shopeeModalUrl.oninput = updateShopeeMessagePreview;
+    }
+    if (dom.btnCopyShopeeMessageOnly) {
+      dom.btnCopyShopeeMessageOnly.onclick = copyShopeeMessageOnly;
+    }
+    if (dom.btnSaveAndCopyShopeeMessage) {
+      dom.btnSaveAndCopyShopeeMessage.onclick = saveAndCopyShopeeMessage;
+    }
   }
+
+  /* =========================================================================
+     SHOPEE MESSAGE BUILDER & QUICK ASSIGN
+     ========================================================================= */
+  function generateShopeeDeliveryMessage(licenseKey, buyerName, orderId, webUrl) {
+    const cleanName = buyerName && buyerName.trim() ? buyerName.trim() : 'Tuan / Puan';
+    const baseWebUrl = webUrl && webUrl.trim() ? webUrl.trim().replace(/\/$/, '') : 'https://abdulhalimroslan2.github.io/PKSK';
+    const directAccessUrl = `${baseWebUrl}/?key=${encodeURIComponent(licenseKey)}`;
+
+    return `Salam sejahtera kepada ${cleanName} & Terima kasih atas pembelian di Shopee kami! ⭐⭐⭐⭐⭐
+
+Berikut adalah pautan & Kod Lesen untuk mengakses Simulator PKSK Tingkatan 1 (KPM) 2026 anda:
+
+🔗 Pautan Akses Web: ${directAccessUrl}
+🔑 Kod Lesen Anda: ${licenseKey}
+📦 Kandungan Pakej:
+1. Akses Penuh 500+ Bank Soalan Autentik KPM (Bahagian A, B & C)
+2. Cikgu AI Semak Esei Serta-Merta (Ox Alpha Engine)
+3. Simulasi Peperiksaan Masa Nyata & Skema Penjelasan Konsep Lengkap
+
+⚠️ PENTING:
+- Kod lesen ini terhad kepada 2 PERANTI (Laptop / Tablet / Telefon) sahaja.
+- Tempoh sah akses adalah 6 BULAN (180 Hari) bermula tarikh pengaktifan pertama.
+- Sila simpan Kod Lesen ini untuk rujukan anda.
+
+Selamat membuat persediaan dan semoga anakanda beroleh keputusan cemerlang melangkah ke SBP / MRSM 2026! 🎯`;
+  }
+
+  function updateShopeeMessagePreview() {
+    if (!dom.shopeeModalKey) return;
+    const key = dom.shopeeModalKey.value || 'PKSK-XXXX-XXXX-XXXX';
+    const buyer = dom.shopeeModalBuyer.value;
+    const order = dom.shopeeModalOrder.value;
+    const url = dom.shopeeModalUrl.value;
+    dom.shopeeMessagePreview.value = generateShopeeDeliveryMessage(key, buyer, order, url);
+  }
+
+  function openQuickShopeeAssignModal(specificKey = null) {
+    let targetKey = specificKey;
+    let targetLic = null;
+
+    if (targetKey) {
+      targetLic = state.allLicenses.find(l => l.license_key === targetKey);
+    } else {
+      // Cari kunci berstatus ACTIVE yang pertama
+      targetLic = state.allLicenses.find(l => l.status === 'ACTIVE');
+      if (targetLic) {
+        targetKey = targetLic.license_key;
+      }
+    }
+
+    if (!targetKey) {
+      showToast('Tiada kunci ACTIVE yang tersedia. Sila jana kunci baharu.', 'error');
+      return;
+    }
+
+    dom.shopeeModalKey.value = targetKey;
+    dom.shopeeModalBuyer.value = targetLic && targetLic.activated_by_name && targetLic.activated_by_name !== 'Calon PKSK' ? targetLic.activated_by_name : '';
+    dom.shopeeModalOrder.value = targetLic && targetLic.activated_by_ic && targetLic.activated_by_ic !== '-' ? targetLic.activated_by_ic : '';
+    
+    updateShopeeMessagePreview();
+    dom.modalShopeeMessage.classList.remove('hidden');
+    dom.shopeeModalBuyer.focus();
+  }
+
+  async function copyShopeeMessageOnly() {
+    const msg = dom.shopeeMessagePreview.value;
+    if (!msg) return;
+    try {
+      await navigator.clipboard.writeText(msg);
+      showToast('📋 Templat mesej Shopee telah disalin ke clipboard!', 'success');
+    } catch (e) {
+      showToast('Gagal menyalin mesej ke clipboard.', 'error');
+    }
+  }
+
+  async function saveAndCopyShopeeMessage() {
+    const key = dom.shopeeModalKey.value;
+    const buyerName = dom.shopeeModalBuyer.value.trim();
+    const orderId = dom.shopeeModalOrder.value.trim();
+    const msg = dom.shopeeMessagePreview.value;
+
+    if (!key) return;
+
+    dom.btnSaveAndCopyShopeeMessage.disabled = true;
+    dom.btnSaveAndCopyShopeeMessage.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+    try {
+      await navigator.clipboard.writeText(msg);
+
+      if (buyerName || orderId) {
+        const lic = state.allLicenses.find(l => l.license_key === key);
+        const updatePayload = {
+          activated_by_name: buyerName || (lic ? lic.activated_by_name : 'Calon PKSK'),
+          activated_by_ic: orderId || (lic ? lic.activated_by_ic : '-')
+        };
+
+        const updated = await updateLicenseInSupabase(key, updatePayload);
+        const idx = state.allLicenses.findIndex(l => l.license_key === key);
+        if (idx !== -1) {
+          state.allLicenses[idx] = { ...state.allLicenses[idx], ...updated };
+        }
+
+        updateStats();
+        applyFiltersAndSearch();
+        showToast(`✓ Maklumat ${buyerName || 'pembeli'} disimpan & Mesej Shopee disalin!`, 'success');
+      } else {
+        showToast('📋 Mesej Shopee berjaya disalin ke clipboard!', 'success');
+      }
+
+      dom.modalShopeeMessage.classList.add('hidden');
+    } catch (err) {
+      console.error(err);
+      showToast('Ralat semasa menyimpan maklumat pembeli: ' + err.message, 'error');
+    } finally {
+      dom.btnSaveAndCopyShopeeMessage.disabled = false;
+      dom.btnSaveAndCopyShopeeMessage.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Simpan Pembeli & Salin Mesej';
+    }
+  }
+
+  window.openShopeeMessageModal = openQuickShopeeAssignModal;
 
   // Initialization
   document.addEventListener('DOMContentLoaded', () => {

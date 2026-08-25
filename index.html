@@ -28,13 +28,16 @@
       </div>
 
       <div class="nav-actions">
+        <button id="btnQuickShopeeAssign" class="btn-admin btn-emerald" style="font-weight:700; font-size:0.9rem; padding:0.6rem 1.25rem; box-shadow:0 4px 15px rgba(16,185,129,0.4);" title="Ambil 1 Kod Baru & Salin Mesej Lengkap untuk Shopee Chat">
+          ⚡ Ambil 1 Kod Baru (Shopee)
+        </button>
         <button id="btnRefreshData" class="btn-admin btn-outline" title="Segarkan Data Terkini dari Supabase">
           <i class="fa-solid fa-rotate"></i> <span>Segarkan</span>
         </button>
         <button id="btnExportCsv" class="btn-admin btn-outline" title="Eksport Kunci ke Fail CSV">
           <i class="fa-solid fa-file-csv"></i> <span>Eksport CSV</span>
         </button>
-        <button id="btnOpenGenerateModal" class="btn-admin btn-emerald" title="Jana Kunci Lesen Baharu">
+        <button id="btnOpenGenerateModal" class="btn-admin btn-primary" title="Jana Kunci Lesen Baharu">
           <i class="fa-solid fa-plus"></i> <span>Jana Kunci Baharu</span>
         </button>
         <button id="btnOpenConfigModal" class="btn-admin btn-ghost" title="Tetapan Supabase">
@@ -42,6 +45,23 @@
         </button>
       </div>
     </header>
+
+    <!-- Quick Assist Banner -->
+    <section class="quick-assist-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.09), rgba(59,130,246,0.09)); border:1px solid rgba(16,185,129,0.25); border-radius:var(--radius-lg); padding:1.15rem 1.5rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; box-shadow:var(--shadow-card);">
+      <div style="flex:1; min-width:280px;">
+        <h3 style="font-size:1.05rem; font-weight:800; color:#34d399; margin-bottom:0.25rem; display:flex; align-items:center; gap:8px;">
+          🛍️ Bantuan Pantas Pesanan Shopee / WhatsApp
+        </h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+          Gunakan butang <strong>"⚡ Ambil 1 Kod Baru (Shopee)"</strong> untuk mengambil kod belum guna seterusnya, isi nama pembeli, dan terus salin templat mesej serahan rasmi berserta pautan simulator ke Shopee Chat.
+        </p>
+      </div>
+      <div>
+        <button id="btnQuickShopeeAssignBanner" class="btn-admin btn-emerald" style="font-weight:700;">
+          ⚡ Ambil 1 Kod Baru (Shopee)
+        </button>
+      </div>
+    </section>
 
     <!-- Analytics Stats Grid -->
     <section class="stats-grid">
@@ -327,9 +347,69 @@
         </div>
       </div>
 
+  <!-- =========================================================================
+       MODAL 4: SHOPEE / WHATSAPP CHAT MESSAGE MODAL
+       ========================================================================= -->
+  <div id="modalShopeeMessage" class="admin-modal-backdrop hidden">
+    <div class="admin-modal-card" style="max-width:580px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-bolt" style="color:#10b981;"></i> <span>Ambil Kod & Salin Mesej Shopee Chat</span>
+        </div>
+        <button class="btn-admin btn-ghost btn-sm" id="btnCloseShopeeModal">
+          <i class="fa-solid fa-xmark fa-lg"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Kod Lesen Tersedia (Sedia Digunakan):</label>
+          <div style="position:relative;">
+            <input type="text" id="shopeeModalKey" class="form-control" style="font-family:var(--font-mono); font-weight:800; font-size:1.05rem; color:#34d399; letter-spacing:1px; background:#070d18;" readonly>
+            <button type="button" id="btnCopyOnlyKey" class="btn-admin btn-ghost btn-sm" style="position:absolute; right:6px; top:6px; font-size:0.75rem;" title="Salin Kunci Sahaja">
+              <i class="fa-solid fa-copy"></i>
+            </button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Nama Pembeli Shopee (Pilihan):</label>
+            <input type="text" id="shopeeModalBuyer" class="form-control" placeholder="cth: Puan Rosnah / En. Hafiz">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Order ID Shopee (Pilihan):</label>
+            <input type="text" id="shopeeModalOrder" class="form-control" placeholder="cth: 260825ABCD99">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Pautan Web Simulator PKSK:</label>
+          <input type="text" id="shopeeModalUrl" class="form-control" value="https://abdulhalimroslan2.github.io/PKSK/">
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+            <label class="form-label" style="margin-bottom:0;">Pratonton Mesej Shopee / WhatsApp:</label>
+            <span style="font-size:0.72rem; color:var(--accent-cyan); font-weight:600;">Kemaskini Automatik</span>
+          </div>
+          <textarea id="shopeeMessagePreview" class="form-control" rows="9" style="font-family:var(--font-sans); font-size:0.8rem; line-height:1.45; background:#06080e; color:#cbd5e1;" readonly></textarea>
+        </div>
+
+        <div style="background:rgba(16, 185, 129, 0.08); border:1px dashed rgba(16, 185, 129, 0.3); border-radius:var(--radius-md); padding:10px 14px; font-size:0.78rem; color:#6ee7b7; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Mesej di atas telah diformat kemas dan siap untuk dihantar terus ke Shopee Chat atau WhatsApp pembeli.</span>
+        </div>
+      </div>
+
       <div class="modal-footer">
-        <button id="btnCancelConfig" class="btn-admin btn-outline">Batal</button>
-        <button id="btnSaveConfig" class="btn-admin btn-primary">Simpan Sambungan</button>
+        <button id="btnCancelShopeeModal" class="btn-admin btn-outline">Batal</button>
+        <button id="btnCopyShopeeMessageOnly" class="btn-admin btn-outline" style="border-color:#10b981; color:#34d399;">
+          <i class="fa-solid fa-copy"></i> Salin Mesej Sahaja
+        </button>
+        <button id="btnSaveAndCopyShopeeMessage" class="btn-admin btn-emerald">
+          <i class="fa-solid fa-paper-plane"></i> Simpan Pembeli & Salin Mesej
+        </button>
       </div>
     </div>
   </div>
