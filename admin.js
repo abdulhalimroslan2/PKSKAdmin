@@ -384,22 +384,24 @@
         statusBadgeHtml = `<span class="status-badge blocked"><span class="status-dot"></span> Disekat</span>`;
       }
 
-      // Candidate info & Device limit (2 Peranti)
+      // Candidate info & Device limit (2 Peranti Hardware Fingerprint)
       let candidateInfo = '<span style="color:var(--text-subtle);">- Belum Digunakan -</span>';
       if (lic.activated_by_name || lic.activated_by_ic || lic.device_id) {
         const devs = lic.device_id ? String(lic.device_id).split(',').filter(Boolean) : [];
         const maxDevs = lic.max_devices || 2;
         const devCountBadge = `<span style="background:rgba(59,130,246,0.15); color:#60a5fa; font-size:0.72rem; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:4px;">${devs.length}/${maxDevs} Peranti</span>`;
 
+        const devPills = devs.map(d => `<span style="display:inline-block; font-family:var(--font-mono); font-size:0.68rem; padding:1px 5px; border-radius:3px; background:#0b1329; color:#38bdf8; border:1px solid rgba(56,189,248,0.2); margin-top:2px;" title="${d}">💻 ${d.length > 18 ? d.substring(0, 16) + '...' : d}</span>`).join(' ');
+
         candidateInfo = `
-          <div style="font-weight:700; color:#fff; display:flex; align-items:center; gap:4px;">
+          <div style="font-weight:700; color:#fff; display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
             ${lic.activated_by_name || 'Calon PKSK'}
             ${devCountBadge}
           </div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">
-            ${lic.activated_by_ic ? `IC: ${lic.activated_by_ic}` : ''}
-            ${devs.length > 0 ? `<span style="margin-left:4px; font-family:var(--font-mono); color:#64748b;">(${devs.length} device ID tersimpan)</span>` : ''}
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+            ${lic.activated_by_ic ? `<span>ID/IC: ${lic.activated_by_ic}</span>` : ''}
           </div>
+          ${devs.length > 0 ? `<div style="margin-top:3px; display:flex; flex-wrap:wrap; gap:4px;">${devPills}</div>` : ''}
         `;
       }
 
