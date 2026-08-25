@@ -356,14 +356,21 @@
         statusBadgeHtml = `<span class="status-badge blocked"><span class="status-dot"></span> Disekat</span>`;
       }
 
-      // Candidate info
+      // Candidate info & Device limit (2 Peranti)
       let candidateInfo = '<span style="color:var(--text-subtle);">- Belum Digunakan -</span>';
       if (lic.activated_by_name || lic.activated_by_ic || lic.device_id) {
+        const devs = lic.device_id ? String(lic.device_id).split(',').filter(Boolean) : [];
+        const maxDevs = lic.max_devices || 2;
+        const devCountBadge = `<span style="background:rgba(59,130,246,0.15); color:#60a5fa; font-size:0.72rem; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:4px;">${devs.length}/${maxDevs} Peranti</span>`;
+
         candidateInfo = `
-          <div style="font-weight:700; color:#fff;">${lic.activated_by_name || 'Calon PKSK'}</div>
+          <div style="font-weight:700; color:#fff; display:flex; align-items:center; gap:4px;">
+            ${lic.activated_by_name || 'Calon PKSK'}
+            ${devCountBadge}
+          </div>
           <div style="font-size:0.75rem; color:var(--text-muted);">
             ${lic.activated_by_ic ? `IC: ${lic.activated_by_ic}` : ''}
-            ${lic.device_id ? `<span style="margin-left:4px; font-family:var(--font-mono); color:#64748b;">(${lic.device_id.substring(0, 14)}...)</span>` : ''}
+            ${devs.length > 0 ? `<span style="margin-left:4px; font-family:var(--font-mono); color:#64748b;">(${devs.length} device ID tersimpan)</span>` : ''}
           </div>
         `;
       }
