@@ -12,7 +12,7 @@
 
   // Konfigurasi Default Supabase
   const DEFAULT_SUPABASE_URL = 'https://lcfkvljmcamulshvyeqe.supabase.co';
-  const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2c2xyc2NnYmhnZGNrdGR0ZnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MzM3MDQsImV4cCI6MjEwMzIwOTcwNH0.B5PRH8Mp7NgKDO9NnyS0akFcBuWz-e5xjKjEFjUD-1Y';
+  const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjZmt2bGptY2FtdWxzaHZ5ZXFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NTc3ODYsImV4cCI6MjEwNjAzMzc4Nn0.bDAu2Inge2D53_zDeaI37mpEfMNcQYJraXxoVfoc1pc';
 
   const STORAGE_KEY_URL = 'pksk_admin_supabase_url';
   const STORAGE_KEY_KEY = 'pksk_admin_supabase_key';
