@@ -4,12 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PKSK License Manager & Admin Hub | Kawalan & Pemantauan Lesen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
   
   <!-- PWA Meta & Icons -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#090d16">
+  <meta name="theme-color" content="#080b11">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="PKSK Admin">
@@ -24,171 +27,207 @@
     <!-- Navbar Header -->
     <header class="admin-navbar">
       <div class="admin-brand">
-        <div class="brand-icon">
+        <div class="brand-icon" aria-hidden="true">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <div>
-          <div class="brand-title">
-            PKSK ADMIN HUB
+        <div class="brand-text-group">
+          <div class="brand-title-row">
+            <h1 class="brand-title">PKSK Admin Hub</h1>
             <span class="brand-badge">Enterprise v2.0</span>
+            <div class="brand-status-indicator" title="Pangkalan data Supabase berhubung secara langsung">
+              <span class="static-dot"></span>
+              <span class="status-indicator-label">Supabase Aktif</span>
+            </div>
           </div>
-          <div class="brand-desc">
-            Sistem Kawalan, Pemantauan & Validasi Lesen Komersial PKSK
-          </div>
+          <p class="brand-desc">Sistem Pengurusan, Pengagihan & Pemantauan Lesen Komersial PKSK 2026</p>
         </div>
       </div>
 
-      <div class="nav-actions">
-        <button id="btnQuickShopeeAssign" class="btn-admin btn-emerald" style="font-weight:700; font-size:0.9rem; padding:0.6rem 1.25rem; box-shadow:0 4px 15px rgba(16,185,129,0.4);" title="Ambil 1 Kod Baru & Salin Mesej Lengkap untuk Shopee Chat">
-          ⚡ Ambil 1 Kod Baru (Shopee)
+      <nav class="nav-actions" aria-label="Tindakan Pentadbir">
+        <button id="btnQuickShopeeAssign" class="btn-admin btn-primary-dispatch" title="Ambil 1 Kod Baru & Salin Mesej Lengkap untuk Shopee Chat (Shortcut: Alt+S)">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Agih Kunci Shopee</span>
+          <kbd class="shortcut-kbd">Alt+S</kbd>
         </button>
         <button id="btnRefreshData" class="btn-admin btn-outline" title="Segarkan Data Terkini dari Supabase">
-          <i class="fa-solid fa-rotate"></i> <span>Segarkan</span>
+          <i class="fa-solid fa-rotate"></i>
+          <span>Segarkan</span>
         </button>
         <button id="btnExportCsv" class="btn-admin btn-outline" title="Eksport Kunci ke Fail CSV">
-          <i class="fa-solid fa-file-csv"></i> <span>Eksport CSV</span>
+          <i class="fa-solid fa-file-arrow-down"></i>
+          <span>Eksport CSV</span>
         </button>
-        <button id="btnOpenGenerateModal" class="btn-admin btn-primary" title="Jana Kunci Lesen Baharu">
-          <i class="fa-solid fa-plus"></i> <span>Jana Kunci Baharu</span>
+        <button id="btnOpenGenerateModal" class="btn-admin btn-outline" title="Jana Kunci Lesen Baharu">
+          <i class="fa-solid fa-plus"></i>
+          <span>Jana Kunci</span>
         </button>
-        <button id="btnOpenConfigModal" class="btn-admin btn-ghost" title="Tetapan Supabase">
-          <i class="fa-solid fa-gear"></i>
+        <button id="btnOpenConfigModal" class="btn-admin btn-icon-only" title="Konfigurasi Supabase">
+          <i class="fa-solid fa-sliders"></i>
         </button>
-        <button id="btnLogoutAdmin" class="btn-admin btn-ghost btn-sm" style="color:#fb7185; border:1px solid rgba(244,63,94,0.25);" title="Log Keluar">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Keluar</span>
+        <button id="btnLogoutAdmin" class="btn-admin btn-ghost-danger" title="Log Keluar dari Sistem Pentadbir">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Keluar</span>
         </button>
-      </div>
+      </nav>
     </header>
 
-    <!-- Quick Assist Banner -->
-    <section class="quick-assist-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.09), rgba(59,130,246,0.09)); border:1px solid rgba(16,185,129,0.25); border-radius:var(--radius-lg); padding:1.15rem 1.5rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; box-shadow:var(--shadow-card);">
-      <div style="flex:1; min-width:280px;">
-        <h3 style="font-size:1.05rem; font-weight:800; color:#34d399; margin-bottom:0.25rem; display:flex; align-items:center; gap:8px;">
-          🛍️ Bantuan Pantas Pesanan Shopee / WhatsApp
-        </h3>
-        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          Gunakan butang <strong>"⚡ Ambil 1 Kod Baru (Shopee)"</strong> untuk mengambil kod belum guna seterusnya, isi nama pembeli, dan terus salin templat mesej serahan rasmi berserta pautan simulator ke Shopee Chat.
-        </p>
+    <!-- Executive Telemetry & Inventory Panel -->
+    <section class="telemetry-panel" aria-label="Ringkasan Kapasiti Lesen">
+      <div class="telemetry-header">
+        <div class="telemetry-title-wrap">
+          <h2 class="telemetry-title">Ringkasan Kapasiti & Inventori Kunci</h2>
+          <span class="telemetry-caption">500 Kunci Lesen Komersial Supabase (Had 2 Peranti Keras per Kunci)</span>
+        </div>
+        <div class="telemetry-actions">
+          <button id="btnQuickShopeeAssignBanner" class="btn-admin btn-dispatch-secondary" title="Buka stesen pengagihan pantas pesanan Shopee">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Buka Stesen Agihan Shopee</span>
+          </button>
+        </div>
       </div>
-      <div>
-        <button id="btnQuickShopeeAssignBanner" class="btn-admin btn-emerald" style="font-weight:700;">
-          ⚡ Ambil 1 Kod Baru (Shopee)
-        </button>
+
+      <!-- Integrated Metric Columns -->
+      <div class="telemetry-metrics-grid">
+        <div class="telemetry-metric-item metric-total">
+          <div class="metric-top">
+            <span class="metric-label">Jumlah Keseluruhan</span>
+            <i class="fa-solid fa-database metric-icon"></i>
+          </div>
+          <div id="statTotalKeys" class="metric-value">--</div>
+          <span class="metric-hint">Kapasiti pool berdaftar</span>
+        </div>
+
+        <div class="telemetry-metric-item metric-active">
+          <div class="metric-top">
+            <span class="metric-label">Tersedia Untuk Jualan</span>
+            <i class="fa-solid fa-box-archive metric-icon"></i>
+          </div>
+          <div id="statActiveKeys" class="metric-value">--</div>
+          <span class="metric-hint">Sedia diagihkan kepada pembeli</span>
+        </div>
+
+        <div class="telemetry-metric-item metric-used">
+          <div class="metric-top">
+            <span class="metric-label">Telah Diaktifkan</span>
+            <i class="fa-solid fa-circle-check metric-icon"></i>
+          </div>
+          <div id="statUsedKeys" class="metric-value">--</div>
+          <span class="metric-hint">Aktif digunakan calon</span>
+        </div>
+
+        <div class="telemetry-metric-item metric-expired">
+          <div class="metric-top">
+            <span class="metric-label">Tamat Tempoh</span>
+            <i class="fa-solid fa-clock-rotate-left metric-icon"></i>
+          </div>
+          <div id="statExpiredKeys" class="metric-value">--</div>
+          <span class="metric-hint">Melebihi tempoh 180 hari</span>
+        </div>
+
+        <div class="telemetry-metric-item metric-blocked">
+          <div class="metric-top">
+            <span class="metric-label">Disekat / Nyahaktif</span>
+            <i class="fa-solid fa-ban metric-icon"></i>
+          </div>
+          <div id="statBlockedKeys" class="metric-value">--</div>
+          <span class="metric-hint">Akses disekat pentadbir</span>
+        </div>
+      </div>
+
+      <!-- Visual Distribution Progress Rail -->
+      <div class="allocation-rail-wrap" title="Taburan status inventori keseluruhan">
+        <div class="allocation-rail" id="allocationRail">
+          <div class="rail-segment seg-active" id="railSegActive" style="width: 100%;"></div>
+          <div class="rail-segment seg-used" id="railSegUsed" style="width: 0%;"></div>
+          <div class="rail-segment seg-expired" id="railSegExpired" style="width: 0%;"></div>
+          <div class="rail-segment seg-blocked" id="railSegBlocked" style="width: 0%;"></div>
+        </div>
+        <div class="allocation-legend">
+          <div class="legend-item"><span class="legend-dot dot-active"></span> Tersedia</div>
+          <div class="legend-item"><span class="legend-dot dot-used"></span> Diaktifkan</div>
+          <div class="legend-item"><span class="legend-dot dot-expired"></span> Tamat Tempoh</div>
+          <div class="legend-item"><span class="legend-dot dot-blocked"></span> Disekat</div>
+        </div>
       </div>
     </section>
 
-    <!-- Analytics Stats Grid -->
-    <section class="stats-grid">
-      <div class="stat-card blue">
-        <div class="stat-header">
-          <span class="stat-label">Jumlah Keseluruhan Kunci</span>
-          <div class="stat-icon"><i class="fa-solid fa-key"></i></div>
-        </div>
-        <div id="statTotalKeys" class="stat-value">--</div>
-        <div class="stat-subtext">Kunci sedia ada dalam pangkalan data</div>
-      </div>
-
-      <div class="stat-card emerald">
-        <div class="stat-header">
-          <span class="stat-label">Tersedia Untuk Jualan</span>
-          <div class="stat-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-        </div>
-        <div id="statActiveKeys" class="stat-value">--</div>
-        <div class="stat-subtext">Belum diaktifkan (Ready for sale)</div>
-      </div>
-
-      <div class="stat-card purple">
-        <div class="stat-header">
-          <span class="stat-label">Telah Diaktifkan</span>
-          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-        </div>
-        <div id="statUsedKeys" class="stat-value">--</div>
-        <div class="stat-subtext">Aktif digunakan oleh pembeli</div>
-      </div>
-
-      <div class="stat-card amber">
-        <div class="stat-header">
-          <span class="stat-label">Tamat Tempoh (6 Bulan)</span>
-          <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
-        </div>
-        <div id="statExpiredKeys" class="stat-value">--</div>
-        <div class="stat-subtext">Tempoh sah langganan telah luput</div>
-      </div>
-
-      <div class="stat-card rose">
-        <div class="stat-header">
-          <span class="stat-label">Disekat / Nyahaktif</span>
-          <div class="stat-icon"><i class="fa-solid fa-ban"></i></div>
-        </div>
-        <div id="statBlockedKeys" class="stat-value">--</div>
-        <div class="stat-subtext">Akses disekat oleh pentadbir</div>
-      </div>
-    </section>
-
-    <!-- Toolbar & Filters -->
-    <section class="toolbar-card">
+    <!-- Toolbar: Search, Filters & Batch Controls -->
+    <section class="toolbar-card" aria-label="Alat Carian dan Penapis">
       <div class="toolbar-top">
         <div class="search-input-wrap">
-          <i class="fa-solid fa-search"></i>
-          <input type="text" id="inputSearch" class="search-input" placeholder="Cari Kunci Lesen (PKSK-XXXX), Nama Calon, No. IC, atau Device ID...">
+          <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+          <input type="text" id="inputSearch" class="search-input" placeholder="Cari Kunci Lesen (PKSK-XXXX), Nama Calon, No. IC, atau Device ID..." autocomplete="off" spellcheck="false">
+          <kbd class="search-shortcut" title="Tekan kekunci '/' untuk mencari">/</kbd>
         </div>
 
-        <div style="display:flex; align-items:center; gap:0.65rem;">
-          <button id="btnCopyNextAvailable" class="btn-admin btn-primary btn-sm" title="Salin kunci belum guna seterusnya untuk diberikan kepada pembeli">
-            <i class="fa-solid fa-copy"></i> Salin 1 Kunci Tersedia
+        <div class="batch-actions-group">
+          <button id="btnCopyNextAvailable" class="btn-admin btn-outline btn-sm" title="Salin 1 kunci belum guna seterusnya untuk pembeli">
+            <i class="fa-regular fa-copy"></i>
+            <span>Salin 1 Kunci</span>
           </button>
           <button id="btnCopyBatchAvailable" class="btn-admin btn-outline btn-sm" title="Salin 10 kunci tersedia sekali gus">
-            <i class="fa-solid fa-paste"></i> Salin 10 Kunci Batch
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Salin 10 Kunci</span>
           </button>
         </div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
-        <div class="filter-pills">
-          <div class="filter-pill active" data-status="ALL">
-            <i class="fa-solid fa-layer-group"></i> Semua <span id="pillCountAll" class="pill-count">0</span>
-          </div>
-          <div class="filter-pill" data-status="ACTIVE">
-            <i class="fa-solid fa-circle" style="color:var(--accent-emerald);"></i> Tersedia (Belum Guna) <span id="pillCountActive" class="pill-count">0</span>
-          </div>
-          <div class="filter-pill" data-status="USED">
-            <i class="fa-solid fa-circle" style="color:var(--accent-blue);"></i> Telah Diaktifkan <span id="pillCountUsed" class="pill-count">0</span>
-          </div>
-          <div class="filter-pill" data-status="EXPIRED">
-            <i class="fa-solid fa-circle" style="color:var(--accent-amber);"></i> Tamat Tempoh <span id="pillCountExpired" class="pill-count">0</span>
-          </div>
-          <div class="filter-pill" data-status="BLOCKED">
-            <i class="fa-solid fa-circle" style="color:var(--accent-rose);"></i> Disekat <span id="pillCountBlocked" class="pill-count">0</span>
-          </div>
+      <div class="toolbar-filter-row">
+        <div class="filter-pills" role="tablist" aria-label="Status Lesen">
+          <button type="button" class="filter-pill active" data-status="ALL">
+            <i class="fa-solid fa-list-ul"></i>
+            <span>Semua</span>
+            <span id="pillCountAll" class="pill-count">0</span>
+          </button>
+          <button type="button" class="filter-pill" data-status="ACTIVE">
+            <span class="status-dot dot-active"></span>
+            <span>Tersedia</span>
+            <span id="pillCountActive" class="pill-count">0</span>
+          </button>
+          <button type="button" class="filter-pill" data-status="USED">
+            <span class="status-dot dot-used"></span>
+            <span>Diaktifkan</span>
+            <span id="pillCountUsed" class="pill-count">0</span>
+          </button>
+          <button type="button" class="filter-pill" data-status="EXPIRED">
+            <span class="status-dot dot-expired"></span>
+            <span>Tamat Tempoh</span>
+            <span id="pillCountExpired" class="pill-count">0</span>
+          </button>
+          <button type="button" class="filter-pill" data-status="BLOCKED">
+            <span class="status-dot dot-blocked"></span>
+            <span>Disekat</span>
+            <span id="pillCountBlocked" class="pill-count">0</span>
+          </button>
         </div>
 
-        <div style="font-size:0.82rem; color:var(--text-muted);">
-          Memaparkan <strong id="dispShownCount" style="color:#ffffff;">0</strong> daripada <strong id="dispTotalFilteredCount" style="color:#ffffff;">0</strong> rekod
+        <div class="records-counter">
+          Memaparkan <strong id="dispShownCount">0</strong> daripada <strong id="dispTotalFilteredCount">0</strong> rekod
         </div>
       </div>
     </section>
 
-    <!-- License Data Table -->
-    <section class="table-card">
+    <!-- License Data Table Section -->
+    <main class="table-card">
       <div class="table-responsive">
         <table class="license-table">
           <thead>
             <tr>
-              <th style="width: 50px;">#</th>
-              <th>Kunci Lesen PKSK</th>
-              <th>Status</th>
-              <th>Maklumat Pengguna / Calon</th>
-              <th>Tarikh Diaktifkan</th>
-              <th>Tarikh Luput (6 Bulan)</th>
-              <th style="text-align: right; min-width: 220px;">Tindakan Pantas</th>
+              <th class="col-num" style="width: 54px;">#</th>
+              <th class="col-key">Kunci Lesen PKSK</th>
+              <th class="col-status">Status</th>
+              <th class="col-candidate">Maklumat Pengguna / Calon</th>
+              <th class="col-date">Tarikh Diaktifkan</th>
+              <th class="col-expiry">Tarikh Luput (6 Bulan)</th>
+              <th class="col-actions" style="text-align: right; min-width: 230px;">Tindakan Pantas</th>
             </tr>
           </thead>
           <tbody id="licenseTableBody">
             <!-- Dynamic Rows Injected by JS -->
             <tr>
-              <td colspan="7" style="text-align:center; padding:3rem; color:var(--text-muted);">
-                <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="margin-bottom:0.75rem; color:var(--accent-blue);"></i><br>
-                Sedang memuat data kunci daripada pangkalan data Supabase...
+              <td colspan="7" class="table-loader-cell">
+                <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+                <p>Sedang memuat data kunci daripada pangkalan data Supabase...</p>
               </td>
             </tr>
           </tbody>
@@ -196,39 +235,37 @@
       </div>
 
       <!-- Table Footer / Pagination -->
-      <div class="table-footer">
-        <div style="font-size:0.82rem; color:var(--text-muted);">
-          Halaman <span id="dispCurrentPage" style="font-weight:700; color:#fff;">1</span> daripada <span id="dispTotalPages" style="font-weight:700; color:#fff;">1</span>
+      <footer class="table-footer">
+        <div class="pagination-info">
+          Halaman <span id="dispCurrentPage" class="font-tabular">1</span> daripada <span id="dispTotalPages" class="font-tabular">1</span>
         </div>
-
         <div class="pagination-wrap" id="paginationWrap">
           <!-- Page numbers injected dynamically -->
         </div>
-      </div>
-    </section>
+      </footer>
+    </main>
   </div>
 
   <!-- =========================================================================
        MODAL 1: EDIT / ACTION MODAL (RESET, BLOCK, EXTEND, RENAME)
        ========================================================================= -->
-  <div id="modalManageLicense" class="admin-modal-backdrop hidden">
+  <div id="modalManageLicense" class="admin-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="manageModalTitle">
     <div class="admin-modal-card">
-      <div class="modal-header">
-        <div class="modal-title">
-          <i class="fa-solid fa-sliders"></i> Pengurusan Kunci Lesen
+      <header class="modal-header">
+        <div class="modal-title" id="manageModalTitle">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Pengurusan Kunci Lesen</span>
         </div>
-        <button class="btn-admin btn-ghost btn-sm" id="btnCloseManageModal">
-          <i class="fa-solid fa-xmark fa-lg"></i>
+        <button class="btn-admin btn-icon-close" id="btnCloseManageModal" aria-label="Tutup Modal">
+          <i class="fa-solid fa-xmark"></i>
         </button>
-      </div>
+      </header>
 
       <div class="modal-body">
-        <div style="background:#07090e; padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-glass); margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Kunci Lesen Dipilih:</div>
-            <div id="modalDispKey" style="font-family:var(--font-mono); font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.05em;">
-              PKSK-XXXX-XXXX-XXXX
-            </div>
+        <div class="modal-key-display-card">
+          <div class="modal-key-info">
+            <span class="modal-key-label">Kunci Lesen Dipilih:</span>
+            <div id="modalDispKey" class="modal-key-value">PKSK-XXXX-XXXX-XXXX</div>
           </div>
           <div id="modalDispStatusBadge">
             <!-- Badge -->
@@ -236,245 +273,251 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Nama Calon / Pembeli:</label>
-          <input type="text" id="modalInputName" class="form-control" placeholder="Nama Calon">
+          <label class="form-label" for="modalInputName">Nama Calon / Pembeli:</label>
+          <input type="text" id="modalInputName" class="form-control" placeholder="cth: Ahmad Danish Bin Rosli">
         </div>
 
         <div class="form-group">
-          <label class="form-label">No. Kad Pengenalan Calon:</label>
+          <label class="form-label" for="modalInputIc">No. Kad Pengenalan Calon (Pilihan):</label>
           <input type="text" id="modalInputIc" class="form-control" placeholder="cth: 120501101234">
         </div>
 
         <div class="form-group">
-          <label class="form-label">Device ID Berdaftar:</label>
-          <input type="text" id="modalInputDeviceId" class="form-control" placeholder="Belum didaftarkan" readonly style="color:var(--text-subtle); background:#0b1120;">
+          <label class="form-label" for="modalInputDeviceId">Device ID Terkini (Hardware Fingerprint):</label>
+          <input type="text" id="modalInputDeviceId" class="form-control form-control-readonly" placeholder="Belum didaftarkan" readonly>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Tarikh Luput (6 Bulan):</label>
+          <label class="form-label" for="modalInputExpiresAt">Tarikh Luput Sah Lesen:</label>
           <input type="datetime-local" id="modalInputExpiresAt" class="form-control">
-          <div style="display:flex; gap:0.5rem; margin-top:0.4rem;">
-            <button type="button" id="btnQuickAdd30d" class="btn-admin btn-outline btn-sm" style="font-size:0.75rem;">+30 Hari</button>
-            <button type="button" id="btnQuickAdd180d" class="btn-admin btn-outline btn-sm" style="font-size:0.75rem;">+180 Hari (6 Bulan)</button>
-            <button type="button" id="btnQuickAdd365d" class="btn-admin btn-outline btn-sm" style="font-size:0.75rem;">+1 Tahun</button>
+          <div class="quick-date-buttons">
+            <button type="button" id="btnQuickAdd30d" class="btn-admin btn-date-preset">+30 Hari</button>
+            <button type="button" id="btnQuickAdd180d" class="btn-admin btn-date-preset">+180 Hari (6 Bulan)</button>
+            <button type="button" id="btnQuickAdd365d" class="btn-admin btn-date-preset">+1 Tahun</button>
           </div>
         </div>
 
-        <hr style="border:none; border-top:1px solid var(--border-glass); margin:1.25rem 0;">
-
-        <!-- Special Management Actions -->
-        <div style="display:flex; flex-direction:column; gap:0.65rem;">
-          <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Operasi Khas:</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
-            <button id="btnModalResetKey" class="btn-admin btn-amber-outline" style="justify-content:center;" title="Nyah-kait peranti dan pulihkan status kepada ACTIVE supaya kunci boleh diguna semula">
-              <i class="fa-solid fa-arrows-rotate"></i> Reset Kunci (Guna Semula)
+        <div class="danger-zone-card">
+          <div class="danger-zone-header">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Tindakan Keselamatan & Kawalan Kunci</span>
+          </div>
+          <div class="danger-zone-actions">
+            <button type="button" id="btnModalResetKey" class="btn-admin btn-outline-warning" title="Padamkan perkaitan peranti supaya pembeli boleh mengaktifkannya semula pada peranti baharu">
+              <i class="fa-solid fa-arrows-rotate"></i> Reset Pendaftaran Peranti
             </button>
-            <button id="btnModalToggleBlock" class="btn-admin btn-danger-outline" style="justify-content:center;" title="Sekat atau buka sekatan kunci ini">
-              <i class="fa-solid fa-ban"></i> Sekat Kunci
+            <button type="button" id="btnModalToggleBlock" class="btn-admin btn-outline-danger" title="Sekat atau buka sekatan kunci lesen ini">
+              <i class="fa-solid fa-ban"></i> Sekat Kunci Ini
             </button>
           </div>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button id="btnCancelManage" class="btn-admin btn-outline">Tutup</button>
+      <footer class="modal-footer">
+        <button id="btnCancelManage" class="btn-admin btn-outline">Batal</button>
         <button id="btnSaveLicenseChanges" class="btn-admin btn-primary">
           <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
         </button>
-      </div>
+      </footer>
     </div>
   </div>
 
   <!-- =========================================================================
-       MODAL 2: GENERATE BATCH NEW KEYS MODAL
+       MODAL 2: GENERATE NEW KEYS MODAL
        ========================================================================= -->
-  <div id="modalGenerateKeys" class="admin-modal-backdrop hidden">
-    <div class="admin-modal-card" style="max-width:500px;">
-      <div class="modal-header">
-        <div class="modal-title">
-          <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-emerald);"></i> Jana Kunci Lesen Baharu
+  <div id="modalGenerateKeys" class="admin-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="genModalTitle">
+    <div class="admin-modal-card">
+      <header class="modal-header">
+        <div class="modal-title" id="genModalTitle">
+          <i class="fa-solid fa-key"></i>
+          <span>Jana Kunci Lesen Baharu</span>
         </div>
-        <button class="btn-admin btn-ghost btn-sm" id="btnCloseGenModal">
-          <i class="fa-solid fa-xmark fa-lg"></i>
+        <button class="btn-admin btn-icon-close" id="btnCloseGenModal" aria-label="Tutup Modal">
+          <i class="fa-solid fa-xmark"></i>
         </button>
-      </div>
+      </header>
 
       <div class="modal-body">
-        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.5;">
-          Kunci unik berformat <code>PKSK-XXXX-XXXX-XXXX</code> akan dijana secara selamat tanpa aksara mengelirukan (0, O, 1, I, L) dan disimpan terus ke pangkalan data Supabase.
-        </p>
-
         <div class="form-group">
-          <label class="form-label">Kuantiti Kunci Hendak Dijana:</label>
-          <select id="selectGenQuantity" class="form-control" style="font-size:0.95rem; font-weight:700;">
+          <label class="form-label" for="selectGenQuantity">Kuantiti Kunci Untuk Dijana:</label>
+          <select id="selectGenQuantity" class="form-control">
             <option value="1">1 Kunci Baharu</option>
             <option value="5">5 Kunci Baharu</option>
-            <option value="10" selected>10 Kunci Baharu</option>
+            <option value="10" selected>10 Kunci Baharu (Disyorkan)</option>
             <option value="25">25 Kunci Baharu</option>
             <option value="50">50 Kunci Baharu</option>
-            <option value="100">100 Kunci Baharu</option>
+            <option value="100">100 Kunci Baharu (Batch Besar)</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Pakej / Tier Lesen:</label>
-          <input type="text" id="inputGenTier" class="form-control" value="PREMIUM_6_MONTHS" readonly style="color:var(--accent-cyan); font-weight:700; background:#0b1120;">
+          <label class="form-label" for="inputGenTier">Kategori / Pakej Lesen:</label>
+          <input type="text" id="inputGenTier" class="form-control" value="PREMIUM_6_MONTHS" readonly>
+          <small class="form-text">Tempoh sah 6 bulan (180 hari) dari tarikh calon mengaktifkannya.</small>
         </div>
 
-        <div id="genResultBox" style="display:none; background:#07090e; padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-glass); max-height:160px; overflow-y:auto; font-family:var(--font-mono); font-size:0.82rem; color:#38bdf8; margin-top:1rem;">
-          <!-- Generated keys list -->
-        </div>
+        <div id="genResultBox" class="gen-result-card" style="display:none;"></div>
       </div>
 
-      <div class="modal-footer">
+      <footer class="modal-footer">
         <button id="btnCancelGen" class="btn-admin btn-outline">Batal</button>
-        <button id="btnExecuteGenerate" class="btn-admin btn-emerald">
+        <button id="btnExecuteGenerate" class="btn-admin btn-primary-dispatch">
           <i class="fa-solid fa-bolt"></i> Jana & Simpan ke Supabase
         </button>
-      </div>
+      </footer>
     </div>
   </div>
 
   <!-- =========================================================================
        MODAL 3: CONFIGURATION SETTINGS MODAL
        ========================================================================= -->
-  <div id="modalConfig" class="admin-modal-backdrop hidden">
-    <div class="admin-modal-card" style="max-width:500px;">
-      <div class="modal-header">
-        <div class="modal-title">
-          <i class="fa-solid fa-database"></i> Sambungan Supabase
+  <div id="modalConfig" class="admin-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="configModalTitle">
+    <div class="admin-modal-card modal-card-compact">
+      <header class="modal-header">
+        <div class="modal-title" id="configModalTitle">
+          <i class="fa-solid fa-database"></i>
+          <span>Sambungan Pangkalan Data Supabase</span>
         </div>
-        <button class="btn-admin btn-ghost btn-sm" id="btnCloseConfigModal">
-          <i class="fa-solid fa-xmark fa-lg"></i>
+        <button class="btn-admin btn-icon-close" id="btnCloseConfigModal" aria-label="Tutup Modal">
+          <i class="fa-solid fa-xmark"></i>
         </button>
-      </div>
+      </header>
 
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">Supabase Project URL:</label>
-          <input type="text" id="cfgSupabaseUrl" class="form-control" value="https://lcfkvljmcamulshvyeqe.supabase.co">
+          <label class="form-label" for="cfgSupabaseUrl">Supabase Project URL:</label>
+          <input type="text" id="cfgSupabaseUrl" class="form-control" value="https://lcfkvljmcamulshvyeqe.supabase.co" spellcheck="false">
         </div>
 
         <div class="form-group">
-          <label class="form-label">Supabase Anon Key:</label>
-          <input type="password" id="cfgSupabaseKey" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+          <label class="form-label" for="cfgSupabaseKey">Supabase Anon Key:</label>
+          <input type="password" id="cfgSupabaseKey" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." spellcheck="false">
+        </div>
+
+        <div class="config-note">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Konfigurasi disimpan secara setempat di pelayar anda untuk menjamin keselamatan kelayakan API.</span>
         </div>
       </div>
 
-      <div class="modal-footer">
+      <footer class="modal-footer">
         <button id="btnCancelConfig" class="btn-admin btn-outline">Batal</button>
         <button id="btnSaveConfig" class="btn-admin btn-primary">Simpan Sambungan</button>
-      </div>
+      </footer>
     </div>
   </div>
 
   <!-- =========================================================================
        MODAL 4: SHOPEE / WHATSAPP CHAT MESSAGE MODAL
        ========================================================================= -->
-  <div id="modalShopeeMessage" class="admin-modal-backdrop hidden">
-    <div class="admin-modal-card" style="max-width:580px;">
-      <div class="modal-header">
-        <div class="modal-title">
-          <i class="fa-solid fa-bolt" style="color:#10b981;"></i> <span>Ambil Kod & Salin Mesej Shopee Chat</span>
+  <div id="modalShopeeMessage" class="admin-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="shopeeModalTitle">
+    <div class="admin-modal-card modal-card-wide">
+      <header class="modal-header">
+        <div class="modal-title" id="shopeeModalTitle">
+          <i class="fa-solid fa-bolt" style="color:#10b981;"></i>
+          <span>Stesen Agihan Pesanan Shopee & WhatsApp</span>
         </div>
-        <button class="btn-admin btn-ghost btn-sm" id="btnCloseShopeeModal">
-          <i class="fa-solid fa-xmark fa-lg"></i>
+        <button class="btn-admin btn-icon-close" id="btnCloseShopeeModal" aria-label="Tutup Modal">
+          <i class="fa-solid fa-xmark"></i>
         </button>
-      </div>
+      </header>
 
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">Kod Lesen Tersedia (Sedia Digunakan):</label>
-          <div style="position:relative;">
-            <input type="text" id="shopeeModalKey" class="form-control" style="font-family:var(--font-mono); font-weight:800; font-size:1.05rem; color:#34d399; letter-spacing:1px; background:#070d18;" readonly>
-            <button type="button" id="btnCopyOnlyKey" class="btn-admin btn-ghost btn-sm" style="position:absolute; right:6px; top:6px; font-size:0.75rem;" title="Salin Kunci Sahaja">
-              <i class="fa-solid fa-copy"></i>
+          <label class="form-label" for="shopeeModalKey">Kod Lesen Terpilih (Sedia Digunakan):</label>
+          <div class="key-input-copy-group">
+            <input type="text" id="shopeeModalKey" class="form-control form-control-key" readonly>
+            <button type="button" id="btnCopyOnlyKey" class="btn-copy-addon" title="Salin Kunci Sahaja">
+              <i class="fa-regular fa-copy"></i>
+              <span>Salin Kunci</span>
             </button>
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        <div class="form-grid-2">
           <div class="form-group">
-            <label class="form-label">Nama Pembeli Shopee (Pilihan):</label>
+            <label class="form-label" for="shopeeModalBuyer">Nama Pembeli (Shopee/WhatsApp):</label>
             <input type="text" id="shopeeModalBuyer" class="form-control" placeholder="cth: Puan Rosnah / En. Hafiz">
           </div>
           <div class="form-group">
-            <label class="form-label">Order ID Shopee (Pilihan):</label>
+            <label class="form-label" for="shopeeModalOrder">Order ID / No. Telefon:</label>
             <input type="text" id="shopeeModalOrder" class="form-control" placeholder="cth: 260825ABCD99">
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Pautan Web Simulator PKSK:</label>
+          <label class="form-label" for="shopeeModalUrl">Pautan Web Simulator PKSK:</label>
           <input type="text" id="shopeeModalUrl" class="form-control" value="https://pksk2026.vercel.app/">
         </div>
 
         <div class="form-group">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-            <label class="form-label" style="margin-bottom:0;">Pratonton Mesej Shopee / WhatsApp:</label>
-            <span style="font-size:0.72rem; color:var(--accent-cyan); font-weight:600;">Kemaskini Automatik</span>
+          <div class="preview-header-row">
+            <label class="form-label" for="shopeeMessagePreview" style="margin-bottom:0;">Pratonton Mesej Penghantaran Pembeli:</label>
+            <span class="preview-live-badge"><i class="fa-solid fa-arrows-rotate fa-spin"></i> Live Sync</span>
           </div>
-          <textarea id="shopeeMessagePreview" class="form-control" rows="9" style="font-family:var(--font-sans); font-size:0.8rem; line-height:1.45; background:#06080e; color:#cbd5e1;" readonly></textarea>
+          <textarea id="shopeeMessagePreview" class="form-control form-control-message" rows="9" readonly></textarea>
         </div>
 
-        <div style="background:rgba(16, 185, 129, 0.08); border:1px dashed rgba(16, 185, 129, 0.3); border-radius:var(--radius-md); padding:10px 14px; font-size:0.78rem; color:#6ee7b7; display:flex; align-items:center; gap:8px;">
-          <i class="fa-solid fa-circle-info"></i>
+        <div class="fulfillment-tip-card">
+          <i class="fa-solid fa-circle-check"></i>
           <span>Mesej di atas telah diformat kemas dan siap untuk dihantar terus ke Shopee Chat atau WhatsApp pembeli.</span>
         </div>
       </div>
 
-      <div class="modal-footer">
+      <footer class="modal-footer">
         <button id="btnCancelShopeeModal" class="btn-admin btn-outline">Batal</button>
-        <button id="btnCopyShopeeMessageOnly" class="btn-admin btn-outline" style="border-color:#10b981; color:#34d399;">
-          <i class="fa-solid fa-copy"></i> Salin Mesej Sahaja
+        <button id="btnCopyShopeeMessageOnly" class="btn-admin btn-outline-dispatch">
+          <i class="fa-regular fa-copy"></i> Salin Mesej Sahaja
         </button>
-        <button id="btnSaveAndCopyShopeeMessage" class="btn-admin btn-emerald">
+        <button id="btnSaveAndCopyShopeeMessage" class="btn-admin btn-primary-dispatch">
           <i class="fa-solid fa-paper-plane"></i> Simpan Pembeli & Salin Mesej
         </button>
-      </div>
+      </footer>
     </div>
   </div>
 
   <!-- =========================================================================
        LOGIN GATE LOCK SCREEN (PASSWORD PROTECTED: @reeZ860)
        ========================================================================= -->
-  <div id="loginGateOverlay" class="login-gate-backdrop">
+  <div id="loginGateOverlay" class="login-gate-backdrop" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <div class="login-gate-card">
       <div class="login-header">
-        <div class="login-icon-badge">
-          <i class="fa-solid fa-lock"></i>
-        </div>
-        <h2>PKSK Admin Hub</h2>
-        <p>Sila masukkan kata laluan pentadbir untuk mengakses sistem pemantauan lesen.</p>
+        <h2 id="loginTitle" class="login-title">
+          <i class="fa-solid fa-shield-halved" style="color:#60a5fa; margin-right:8px;"></i>
+          PKSK Admin Vault
+        </h2>
+        <p class="login-desc">Sila masukkan kata laluan keselamatan untuk mengakses sistem kawalan lesen.</p>
       </div>
 
       <form id="loginGateForm">
-        <div class="form-group" style="margin-bottom:1.25rem;">
+        <div class="form-group">
           <label class="form-label" for="loginPasswordInput">Kata Laluan Pentadbir:</label>
-          <div style="position:relative;">
-            <input type="password" id="loginPasswordInput" class="form-control" placeholder="Masukkan kata laluan..." autofocus autocomplete="current-password">
-            <button type="button" id="btnToggleLoginPass" class="btn-admin btn-ghost btn-sm" style="position:absolute; right:8px; top:7px; font-size:0.85rem;" title="Papar/Sembunyi Kata Laluan">
+          <div class="password-input-wrap">
+            <input type="password" id="loginPasswordInput" class="form-control password-input" placeholder="Masukkan kata laluan..." autofocus autocomplete="current-password">
+            <button type="button" id="btnToggleLoginPass" class="btn-toggle-eye" title="Papar atau sembunyikan kata laluan" aria-label="Papar kata laluan">
               <i class="fa-solid fa-eye" id="eyeIcon"></i>
             </button>
           </div>
-          <div id="loginErrorMsg" style="display:none; color:#fb7185; font-size:0.82rem; margin-top:0.45rem; font-weight:600;">
-            <i class="fa-solid fa-circle-exclamation"></i> Kata laluan tidak sah. Sila cuba lagi.
+          <div id="loginErrorMsg" class="login-error-alert" style="display:none;">
+            <i class="fa-solid fa-circle-exclamation"></i> Kata laluan tidak sah. Sila semak semula.
           </div>
         </div>
 
-        <button type="submit" id="btnLoginSubmit" class="btn-admin btn-primary" style="width:100%; padding:0.75rem; font-size:0.95rem; font-weight:700; justify-content:center; box-shadow:0 4px 15px rgba(37,99,235,0.4);">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Log Masuk Pentadbir</span>
+        <button type="submit" id="btnLoginSubmit" class="btn-admin btn-primary-submit">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Nyahkunci Portal Pentadbir</span>
         </button>
       </form>
 
-      <div style="margin-top:1.5rem; text-align:center; font-size:0.75rem; color:var(--text-subtle);">
-        <i class="fa-solid fa-shield-halved"></i> Dilindungi Kata Laluan Keselamatan
-      </div>
+      <footer class="login-footer">
+        <i class="fa-solid fa-shield-check"></i>
+        <span>Dilindungi Pengesahan Kredensial Selamat</span>
+      </footer>
     </div>
   </div>
 
   <!-- Toast Notifications Container -->
-  <div id="toastContainer"></div>
+  <div id="toastContainer" class="toast-stack" aria-live="polite"></div>
 
   <!-- Admin Controller Script -->
   <script src="admin.js"></script>

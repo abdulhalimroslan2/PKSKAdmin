@@ -56,12 +56,16 @@
     loginErrorMsg: document.getElementById('loginErrorMsg'),
     btnLogoutAdmin: document.getElementById('btnLogoutAdmin'),
 
-    // Stats
+    // Stats & Allocation Rail
     statTotalKeys: document.getElementById('statTotalKeys'),
     statActiveKeys: document.getElementById('statActiveKeys'),
     statUsedKeys: document.getElementById('statUsedKeys'),
     statExpiredKeys: document.getElementById('statExpiredKeys'),
     statBlockedKeys: document.getElementById('statBlockedKeys'),
+    railSegActive: document.getElementById('railSegActive'),
+    railSegUsed: document.getElementById('railSegUsed'),
+    railSegExpired: document.getElementById('railSegExpired'),
+    railSegBlocked: document.getElementById('railSegBlocked'),
 
     // Filter & Toolbar
     inputSearch: document.getElementById('inputSearch'),
@@ -302,6 +306,13 @@
     dom.pillCountUsed.textContent = countUsed;
     dom.pillCountExpired.textContent = countExpired;
     dom.pillCountBlocked.textContent = countBlocked;
+
+    if (total > 0) {
+      if (dom.railSegActive) dom.railSegActive.style.width = ((countActive / total) * 100).toFixed(1) + '%';
+      if (dom.railSegUsed) dom.railSegUsed.style.width = ((countUsed / total) * 100).toFixed(1) + '%';
+      if (dom.railSegExpired) dom.railSegExpired.style.width = ((countExpired / total) * 100).toFixed(1) + '%';
+      if (dom.railSegBlocked) dom.railSegBlocked.style.width = ((countBlocked / total) * 100).toFixed(1) + '%';
+    }
   }
 
   /* =========================================================================
@@ -446,7 +457,7 @@
           <td>
             <div class="key-box">
               <span>${lic.license_key}</span>
-              <button class="btn-copy-mini" onclick="window.copyLicenseKey('${lic.license_key}')" title="Salin Kunci Ini">
+              <button class="btn-copy-mini" onclick="window.copyLicenseKey('${lic.license_key}', this)" title="Salin Kunci Ini">
                 <i class="fa-regular fa-copy"></i>
               </button>
             </div>
@@ -556,9 +567,20 @@
     window.scrollTo({ top: 400, behavior: 'smooth' });
   };
 
-  window.copyLicenseKey = function (key) {
+  window.copyLicenseKey = function (key, btnElement) {
     navigator.clipboard.writeText(key).then(() => {
       showToast(`Kunci <strong>${key}</strong> telah disalin ke papan keratan!`, 'info');
+      if (btnElement) {
+        const icon = btnElement.querySelector('i');
+        if (icon) {
+          icon.className = 'fa-solid fa-check';
+          btnElement.classList.add('copied');
+          setTimeout(() => {
+            icon.className = 'fa-regular fa-copy';
+            btnElement.classList.remove('copied');
+          }, 1200);
+        }
+      }
     });
   };
 
@@ -927,6 +949,27 @@
     if (dom.btnLogoutAdmin) {
       dom.btnLogoutAdmin.onclick = handleLogout;
     }
+
+    // Global Keyboard Shortcuts (Operate Mode Accessibility)
+    document.addEventListener('keydown', (e) => {
+      // Escape closes any active modal
+      if (e.key === 'Escape') {
+        if (dom.modalManageLicense) dom.modalManageLicense.classList.add('hidden');
+        if (dom.modalGenerateKeys) dom.modalGenerateKeys.classList.add('hidden');
+        if (dom.modalConfig) dom.modalConfig.classList.add('hidden');
+        if (dom.modalShopeeMessage) dom.modalShopeeMessage.classList.add('hidden');
+      }
+      // Slash '/' focuses search bar
+      if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+        e.preventDefault();
+        if (dom.inputSearch) dom.inputSearch.focus();
+      }
+      // Alt + S opens Shopee dispatch modal
+      if (e.altKey && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        openQuickShopeeAssignModal();
+      }
+    });
   }
 
   /* =========================================================================
