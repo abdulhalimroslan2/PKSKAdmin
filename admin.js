@@ -22,10 +22,15 @@
   const STORAGE_KEY_AUTH = 'pksk_admin_auth_session';
 
   function getSupabaseConfig() {
-    return {
-      url: localStorage.getItem(STORAGE_KEY_URL) || DEFAULT_SUPABASE_URL,
-      key: localStorage.getItem(STORAGE_KEY_KEY) || DEFAULT_SUPABASE_KEY
-    };
+    let url = localStorage.getItem(STORAGE_KEY_URL);
+    // Perlindungan Auto-Migrasi: Kosongkan URL projek lama yang telah pupus
+    if (!url || url.includes("rvslrscgbhgdcktdtfrl") || url.includes("zblynieuimcxkkaaqaxy")) {
+      url = DEFAULT_SUPABASE_URL;
+      localStorage.setItem(STORAGE_KEY_URL, DEFAULT_SUPABASE_URL);
+      localStorage.setItem(STORAGE_KEY_KEY, DEFAULT_SUPABASE_KEY);
+    }
+    const key = localStorage.getItem(STORAGE_KEY_KEY) || DEFAULT_SUPABASE_KEY;
+    return { url, key };
   }
 
   // State Pengurusan
